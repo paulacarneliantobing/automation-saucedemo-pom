@@ -11,7 +11,6 @@ exports.config = {
     {
       browserName: "chrome",
 
-      // WDIO v9 chromedriver
       "wdio:chromedriverOptions": {},
 
       "goog:chromeOptions": {
@@ -33,28 +32,17 @@ exports.config = {
   connectionRetryCount: 3,
 
   //
-  // SERVICES
+  // ✅ SERVICES (WAJIB INI)
   //
-  services: [
-    [
-      "visual",
-      {
-        baselineFolder: "./baseline/",
-        screenshotPath: "./.tmp/",
-        autoSaveBaseline: true,
-
-        // (ini nanti bisa dipindah ke compareOptions kalau mau)
-        blockOutStatusBar: true,
-        blockOutToolBar: true,
-      },
-    ],
-  ],
+  services: [],
 
   framework: "mocha",
 
   reporters: ["spec"],
 
-  // ✅ TAMBAHAN PENTING (BIAR EXPECT WDIO JALAN)
+  //
+  // ✅ EXPECT WDIO AKTIF
+  //
   expect: {
     wait: 5000,
     interval: 500,

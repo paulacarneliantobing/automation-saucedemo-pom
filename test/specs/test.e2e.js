@@ -1,52 +1,38 @@
 const LoginPage = require("../pageobjects/login.page");
+const InventoryPage = require("../pageobjects/inventory.page");
 
 describe("Login SauceDemo POM", () => {
-  it("should login successfully", async () => {
+  it("Positive - login success", async () => {
     await LoginPage.open();
     await LoginPage.login("standard_user", "secret_sauce");
 
-    const titleText = await $(".title").getText();
-    expect(titleText).toContain("Products");
-
-    await browser.checkScreen("login-success");
+    await expect(InventoryPage.title).toHaveText("Products");
   });
 
-  it("should fail login with wrong password", async () => {
+  it("Negative - invalid username", async () => {
     await LoginPage.open();
-    await LoginPage.login("standard_user", "salah_password");
+    await LoginPage.login("invalid_user", "secret_sauce");
 
-    const error = await $(".error-message-container");
-    await error.waitForDisplayed();
-
-    const errorText = await error.getText();
-    expect(errorText).toContain("Username and password do not match");
-
-    await browser.checkScreen("wrong-password");
+    await expect(LoginPage.errorMessage).toHaveText(
+      expect.stringContaining("Username and password do not match"),
+    );
   });
 
-  it("should fail login with invalid username", async () => {
+  it("Negative - wrong password", async () => {
     await LoginPage.open();
-    await LoginPage.login("user_salah", "secret_sauce");
+    await LoginPage.login("standard_user", "wrong_password");
 
-    const error = await $(".error-message-container");
-    await error.waitForDisplayed();
-
-    const errorText = await error.getText();
-    expect(errorText).toContain("Username and password do not match");
-
-    await browser.checkScreen("invalid-username");
+    await expect(LoginPage.errorMessage).toHaveText(
+      expect.stringContaining("Username and password do not match"),
+    );
   });
 
-  it("should fail login locked user", async () => {
+  it("Negative - locked out user", async () => {
     await LoginPage.open();
     await LoginPage.login("locked_out_user", "secret_sauce");
 
-    const error = await $(".error-message-container");
-    await error.waitForDisplayed();
-
-    const errorText = await error.getText();
-    expect(errorText).toContain("locked out");
-
-    await browser.checkScreen("locked-user");
+    await expect(LoginPage.errorMessage).toHaveText(
+      expect.stringContaining("locked out"),
+    );
   });
 });

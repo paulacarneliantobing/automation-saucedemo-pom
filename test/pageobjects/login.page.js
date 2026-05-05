@@ -1,14 +1,14 @@
 class LoginPage {
-  // ELEMENT
-  get username() {
+  // locator
+  get inputUsername() {
     return $("#user-name");
   }
 
-  get password() {
+  get inputPassword() {
     return $("#password");
   }
 
-  get loginBtn() {
+  get loginButton() {
     return $("#login-button");
   }
 
@@ -16,28 +16,25 @@ class LoginPage {
     return $(".error-message-container");
   }
 
-  get title() {
-    return $(".title");
-  }
-
-  // ACTION
+  // action
   async open() {
     await browser.url("/");
+    await this.inputUsername.waitForDisplayed();
   }
 
   async login(username, password) {
-    await this.username.setValue(username);
-    await this.password.setValue(password);
-    await this.loginBtn.click();
+    await this.inputUsername.setValue(username);
+    await this.inputPassword.setValue(password);
+    await this.loginButton.click();
   }
 
-  // ASSERT HELPER (biar test lebih clean)
-  async getErrorText() {
-    return this.errorMessage.getText();
+  async isLoginFailed() {
+    return await this.errorMessage.isDisplayed();
   }
 
-  async getTitleText() {
-    return this.title.getText();
+  async isErrorMessageContains(text) {
+    const message = await this.errorMessage.getText();
+    return message.includes(text);
   }
 }
 
